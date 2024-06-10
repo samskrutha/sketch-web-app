@@ -9,8 +9,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${REGISTRY_URL}/sketch-web-app:latest'
-                    sh 'docker images'  
+                    sh 'docker build -t ${REGISTRY_URL}/sketch-web-app:latest .'
+                    sh 'docker images'
                 }
             }
         }
