@@ -6,15 +6,10 @@ pipeline {
         REGISTRY_CREDENTIALS = 'dockerhub-credentials'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/samskrutha/sketch-web-app.git', credentialsId: "${GIT_CREDENTIALS_ID}"
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/', "${REGISTRY_CREDENTIALS}") {
+                    docker.withRegistry('https://registry.hub.docker.com', "${REGISTRY_CREDENTIALS}") {
                         def app = docker.build("${REGISTRY_URL}/sketch-web-app:latest")
                         app.push()
                     }
