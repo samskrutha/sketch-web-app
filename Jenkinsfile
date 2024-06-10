@@ -6,6 +6,14 @@ pipeline {
         REGISTRY_CREDENTIALS = 'dockerhub-credentials'
     }
     stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t ${REGISTRY_URL}/sketch-web-app:latest'
+                    sh 'docker images'  
+                }
+            }
+        }
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${REGISTRY_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
