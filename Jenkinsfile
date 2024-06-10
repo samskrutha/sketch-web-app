@@ -20,7 +20,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${REGISTRY_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     script {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh 'docker push ${REGISTRY_URL}/sketch-web-app:latest'
+                        sh 'docker push ${REGISTRY_URL}/sketch-web-app:${IMAGE_TAG}'
                     }
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
                     sh 'git pull origin main'
                     sh 'echo "Before sed:"'
                     sh 'cat apps/sketch-web-app/deployment.yaml'
-                    sh 'sed -i "s|image: .*$|image: ${REGISTRY_URL}/sketch-web-app:latest|" apps/sketch-web-app/deployment.yaml'
+                    sh 'sed -i "s|image: .*$|image: ${REGISTRY_URL}/sketch-web-app:${IMAGE_TAG}|" apps/sketch-web-app/deployment.yaml'
                     sh 'echo "After sed:"'
                     sh 'cat apps/sketch-web-app/deployment.yaml'
                     
@@ -42,7 +42,7 @@ pipeline {
                         def changes = sh(script: "git status --porcelain", returnStdout: true).trim()
                         if (changes) {
                             sh 'git add apps/sketch-web-app/deployment.yaml'
-                            sh 'git commit -m "Update image to ${REGISTRY_URL}/sketch-web-app:latest"'
+                            sh 'git commit -m "Update image to ${REGISTRY_URL}/sketch-web-app:${IMAGE_TAG}"'
                             sh 'git push origin main'
                         } else {
                             echo 'No changes to commit'
