@@ -28,11 +28,12 @@ pipeline {
             steps {
                 script {
                     git branch: 'main', url: 'https://github.com/samskrutha/sketch-argocd.git', credentialsId: "${GIT_CREDENTIALS_ID}"
+                    sh 'git branch --set-upstream-to=origin/main main'  
                     sh 'echo "Update manifest to use new image"'
-                    sh 'git pull'
+                    sh 'git pull origin main'  
                     sh 'sed -i "s|image: .*$|image: ${REGISTRY_URL}/sketch-web-app:latest|" apps/sketch-web-app/deployment.yaml'
                     sh 'git commit -am "Update image to ${REGISTRY_URL}/sketch-web-app:latest"'
-                    sh 'git push'
+                    sh 'git push origin main'  
                 }
             }
         }
