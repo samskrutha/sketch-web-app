@@ -9,7 +9,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${REGISTRY_CREDENTIALS}") {
+                    docker.withRegistry('', "${REGISTRY_CREDENTIALS}") {
                         def app = docker.build("${REGISTRY_URL}/sketch-web-app:latest")
                         app.push()
                     }
