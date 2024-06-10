@@ -27,9 +27,9 @@ pipeline {
         }
         stage('Notify GitOps Repo') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                withCredentials([string(credentialsId: "${GIT_CREDENTIALS_ID}")]) {
                     script {
-                        git branch: 'main', url: 'https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/samskrutha/sketch-argocd.git'
+                        git branch: 'main', url: 'https://${GIT_CREDENTIALS_ID}@github.com/samskrutha/sketch-argocd.git'
                         sh 'git branch --set-upstream-to=origin/main main'
                         sh 'echo "Update manifest to use new image"'
                         sh 'git pull origin main'
