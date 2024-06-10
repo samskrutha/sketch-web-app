@@ -4,12 +4,13 @@ pipeline {
         GIT_CREDENTIALS_ID = 'github-token'
         REGISTRY_URL = 'samskrutha'
         REGISTRY_CREDENTIALS = 'dockerhub-credentials'
+        IMAGE_TAG = "latest-${BUILD_NUMBER}"
     }
     stages {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${REGISTRY_URL}/sketch-web-app:latest .'
+                    sh 'docker build -t ${REGISTRY_URL}/sketch-web-app:${IMAGE_TAG} .'
                     sh 'docker images'
                 }
             }
