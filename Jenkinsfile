@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'github-token'
+        GIT_CREDENTIALS_ID = 'sketch-git'
         REGISTRY_URL = 'samskrutha'
         REGISTRY_CREDENTIALS = 'dockerhub-credentials'
         IMAGE_TAG = "latest-${BUILD_NUMBER}"
@@ -27,9 +27,9 @@ pipeline {
         }
         stage('Notify GitOps Repo') {
             steps {
-                withCredentials([string(credentialsId: "${GIT_CREDENTIALS_ID}")]) {
+                withCredentials([string(credentialsId: "${GIT_CREDENTIALS_ID}", variable: 'GIT_TOKEN')]) {
                     script {
-                        git branch: 'main', url: 'https://${GIT_CREDENTIALS_ID}@github.com/samskrutha/sketch-argocd.git'
+                        git branch: 'main', url: "https://${GIT_TOKEN}@github.com/samskrutha/sketch-argocd.git"
                         sh 'git branch --set-upstream-to=origin/main main'
                         sh 'echo "Update manifest to use new image"'
                         sh 'git pull origin main'
@@ -57,6 +57,12 @@ pipeline {
     post {
         always {
             cleanWs()
+        }
+        success {
+            echo 'Build, push, and GitOps update successful.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
