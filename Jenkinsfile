@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${REGISTRY_CREDENTIALS}") {
+                    docker.withRegistry('https://index.docker.io/', "${REGISTRY_CREDENTIALS}") {
                         def app = docker.build("${REGISTRY_URL}/sketch-web-app:latest")
                         app.push()
                     }
