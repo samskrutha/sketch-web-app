@@ -6,12 +6,12 @@ pipeline {
         REGISTRY_CREDENTIALS = 'dockerhub-credentials'
     }
     stages {
-        stage('Build Docker Image') {
+        stage('Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('', "${REGISTRY_CREDENTIALS}") {
-                        def app = docker.build("${REGISTRY_URL}/sketch-web-app:latest")
-                        app.push()
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    script {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker push ${REGISTRY_URL}/simple-web-app:latest'
                     }
                 }
             }
